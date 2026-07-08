@@ -3,85 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Console Launcher</title>
+    <title>Eagler Dashboard</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
-            background-color: #0a0a0a;
-            font-family: 'Courier New', Courier, monospace;
-            color: #00ff00;
+            background-color: #0f0f13;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #e2e8f0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
-        .terminal-box {
-            background: #111;
-            padding: 25px;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-            text-align: left;
-            border: 1px solid #00ff00;
-            max-width: 450px;
-            width: 100%;
+        .container {
+            background-color: #1a1b26;
+            border: 1px solid #2f334d;
+            border-radius: 8px;
+            padding: 30px;
+            width: 350px;
+            text-align: center;
         }
 
-        .header-text {
-            color: #00ff00;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-bottom: 1px dashed #00ff00;
-            padding-bottom: 10px;
+        h2 {
+            margin-top: 0;
+            color: #7aa2f7;
+            font-size: 1.5rem;
         }
 
-        .system-status {
-            color: #888;
-            font-size: 0.85em;
-            margin-bottom: 20px;
-        }
-
-        .btn-link {
+        .btn {
             display: block;
             width: 100%;
             padding: 12px;
-            margin: 10px 0;
-            background-color: #111;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            font-size: 1em;
+            margin: 15px 0;
+            background-color: #24283b;
+            color: #bb9af7;
+            border: 1px solid #414868;
+            border-radius: 6px;
             font-weight: bold;
             text-decoration: none;
-            text-align: center;
-            cursor: pointer;
             box-sizing: border-box;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
 
-        .btn-link:hover {
-            background-color: #00ff00;
-            color: #111;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
-        .btn-link:active {
-            transform: scale(0.98);
-        }
-
-        .prompt-symbol {
-            color: #fff;
+        .btn:hover {
+            background-color: #7aa2f7;
+            color: #1a1b26;
+            border-color: #7aa2f7;
         }
     </style>
 </head>
 <body>
 
-    <div class="terminal-box">
-        <div class="header-text">
-            <span class="prompt-symbol">></span> SYSTEM_LAUNCHER_INTERFACE
-        </div>
+    <div class="container">
+        <h2>Selecione o Cliente</h2>
         
-        <div class="system-status">
-            [STATUS] Inicializado com sucesso.<br>
-            [AMB] VS Code Web Environment.<br>
+        <a href="https://eaglercraft.com/mc/1.8.8/" target="_top" class="btn">Abrir Client 1.8.8</a>
+        <a href="https://eaglercraft.com/mc/1.5.2/" target="_top" class="btn">Abrir Client 1.5.2</a>
+    </div>
+
+</body>
+</html>
