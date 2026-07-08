@@ -3,131 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Eaglercraft Client</title>
+    <title>Eaglercraft Custom Launcher</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #111;
-            font-family: sans-serif;
-            color: white;
+            background-color: #141414;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             height: 100vh;
             overflow: hidden;
         }
-        header {
-            padding: 10px;
-            text-align: center;
-        }
-        .game-container {
-            width: 90vw;
-            height: 80vh;
-            border: 4px solid #5cbf3d;
-            box-shadow: 0 0 20px rgba(0,0,0,0.7);
-        }
-        iframe {
+
+        /* Estilo do Menu do Launcher */
+        .launcher-panel {
             width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>Eaglercraft Web Client</h1>
-        <p>Jogue Minecraft direto do seu navegador customizado</p>
-    </header>
-
-    <div class="game-container">
-        <iframe src="https://eaglercraft.com/mc/1.8.8/" allowfullscreen="true"></iframe>
-    </div>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Mini Craft Engine</title>
-    <style>
-        body { margin: 0; overflow: hidden; background: #87CEEB; }
-        #ui {
-            position: absolute; top: 10px; left: 10px;
-            color: white; font-family: monospace; font-size: 16px;
-            text-shadow: 1px 1px 2px black;
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-</head>
-<body>
-
-    <div id="ui">Use o mouse para arrastar e ver o mundo de blocos</div>
-
-    <script>
-        // 1. Cenário, Câmera e Renderizador
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB); // Cor do céu
-
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // 2. Luzes
-        const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(5, 10, 7).normalize();
-        scene.add(light);
-        scene.add(new THREE.AmbientLight(0x404040));
-
-        // 3. Textura/Material do Bloco (Estilo Grama)
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshLambertMaterial({ color: 0x5cbf3d }); // Verde grama
-
-        // 4. Gerando um "Mundo" de blocos simples (Grid 10x10)
-        for (let x = -5; x < 5; x++) {
-            for (let z = -5; z < 5; z++) {
-                // Altura aleatória simulando relevo do Minecraft
-                const height = Math.floor(Math.sin(x * 0.5) * Math.cos(z * 0.5) * 2);
-                
-                const block = new THREE.Mesh(geometry, material);
-                block.position.set(x, height, z);
-                scene.add(block);
-            }
+            max-width: 400px;
+            background: #222;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 2px solid #5cbf3d;
         }
 
-        camera.position.set(0, 5, 8);
-        camera.lookAt(0, 0, 0);
-
-        // Interação básica com o mouse para girar a câmera
-        let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-
-        document.addEventListener('mousedown', () => isDragging = true);
-        document.addEventListener('mouseup', () => isDragging = false);
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                const deltaMove = { x: e.offsetX - previousMousePosition.x, y: e.offsetY - previousMousePosition.y };
-                scene.rotation.y += deltaMove.x * 0.005;
-            }
-            previousMousePosition = { x: e.offsetX, y: e.offsetY };
-        });
-
-        // 5. Loop de Renderização
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // Ajustar a tela se redimensionar o VS Code/Navegador
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
-</body>
-</html>
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8em;
+            color: #5cbf3d;
+            text-shadow: 1px 1px 2
