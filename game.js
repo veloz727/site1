@@ -16,7 +16,7 @@ let gameSettings = {
     kbVertical: 0.3,
     jumpStrength: 15.0,
     gravity: 9.8 * 4,
-    renderDistance: 3,
+    renderDistance: 2, // Reduzido ligeiramente para dar muito mais FPS
     chunkSize: 16,
     worldBorder: 500000,
     blockBreakTime: 1000 
@@ -61,28 +61,28 @@ window.initGame = function(version) {
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x7ec0ee);
-    scene.fog = new THREE.FogExp2(0x7ec0ee, 0.015);
+    scene.fog = new THREE.FogExp2(0x7ec0ee, 0.025); // Neblina mais próxima oculta o carregamento e poupa a placa de vídeo
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 500);
     
     pitch.add(camera);
     yaw.add(pitch);
     yaw.position.set(8, 15, 8);
     scene.add(yaw);
 
-    renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+    renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance", precision: "mediump" });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(1); // Trava o pixel ratio em 1 para evitar lag em telas 4K/Retina
     
     setupHUD();
     
     const container = document.getElementById("game-container");
     container.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambientLight);
     
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.45);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.35);
     directionalLight.position.set(20, 40, 20);
     scene.add(directionalLight);
 
@@ -232,7 +232,8 @@ function startBreakingBlock() {
 
 function stopBreakingBlock() {
     breakingBlock = null;
-    document.getElementById("break-progress").style.display = "none";
+    const bar = document.getElementById("break-progress");
+    if (bar) bar.style.display = "none";
 }
 
 function checkBlockBreaking() {
@@ -246,7 +247,10 @@ function checkBlockBreaking() {
     if (intersects.length > 0 && intersects[0].object === breakingBlock && intersects[0].distance < 5) {
         let elapsed = performance.now() - breakStartTime;
         let pct = Math.min(100, (elapsed / gameSettings.blockBreakTime) * 100);
-        document.getElementById("break-bar").style.style.width = pct + "%";
+        
+        // Consertado erro que quebrava o script interno e gerava lag violento
+        const bBar = document.getElementById("break-bar");
+        if (bBar) bBar.style.width = pct + "%";
 
         if (elapsed >= gameSettings.blockBreakTime) {
             let parentChunk = breakingBlock.parent;
