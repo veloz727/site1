@@ -1,14 +1,27 @@
 body {
- text-align: center;
- background-color: #f4f4f4;
- font-family: Arial, sans-serif;
+    margin: 0;
+    overflow: hidden;
+    font-family: sans-serif;
 }
-
-h1 {
- color: #333;
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+    user-select: none;
+    pointer-events: none;
 }
-
-canvas {
- border: 2px solid black;
- margin-top: 20px;
+#instructions {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    pointer-events: none;
 }
