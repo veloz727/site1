@@ -10,8 +10,23 @@ let pitch = new THREE.Object3D();
 let gameSettings = {
     attackDelay: 0,
     speed: 400.0,
-    sensitivity: 0.002
+    sensitivity: 0.002,
+    kbHorizontal: 1.5,
+    kbVertical: 0.3
 };
+
+let playerStats = {
+    health: 20,
+    food: 20,
+    isBlocking: false
+};
+
+let clicksThisSecond = 0;
+let currentCPS = 0;
+let lastCPSCheck = performance.now();
+let lastCommandTime = 0;
+let bypassCommands = ["/spawn", "/report", "/ajuda"];
+let savedInventory = null;
 
 window.initGame = function(version) {
     if (version === "1.12.1") {
@@ -78,8 +93,19 @@ window.initGame = function(version) {
         }
     }
 
-    document.body.addEventListener('click', () => {
-        document.body.requestPointerLock();
+    document.body.addEventListener('click', (e) => {
+        if (document.pointerLockElement !== document.body) {
+            document.body.requestPointerLock();
+            return;
+        }
+
+        if (e.button === 0) {
+            handleLeftClick();
+        }
+    });
+
+    document.body.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -113,11 +139,79 @@ window.initGame = function(version) {
     animate();
 }
 
+function handleLeftClick() {
+    clicksThisSecond++;
+
+    let isSprinting = (moveForward && velocity.z < -50);
+    let isCritical = (velocity.y < 0 && yaw.position.y > 2);
+    let currentDamage = 5;
+
+    if (playerStats.isBlocking) {
+        currentDamage *= 0.5;
+    }
+
+    if (isCritical) {
+        currentDamage *= 1.5;
+    }
+
+    if (isSprinting) {
+        let pushHorizontal = gameSettings.kbHorizontal;
+        let pushVertical = gameSettings.kbVertical;
+    }
+}
+
+window.executeGameCommand = function(cmdString) {
+    let baseCmd = cmdString.toLowerCase().split(" ")[0];
+    
+    if (bypassCommands.includes(baseCmd)) {
+        processCommandLogic(cmdString);
+        return;
+    }
+
+    let now = performance.now();
+    if (now - lastCommandTime < 3000) {
+        return;
+    }
+
+    lastCommandTime = now;
+    processCommandLogic(cmdString);
+}
+
+function processCommandLogic(cmdString) {
+    let args = cmdString.split(" ");
+    let baseCmd = args[0].toLowerCase();
+
+    if (baseCmd === "/verinv") {
+        let currentStatus = {
+            health: playerStats.health,
+            food: playerStats.food
+        };
+    } else if (baseCmd === "/clearinv") {
+        if (args[1] === "undo") {
+            if (savedInventory) {
+                savedInventory = null;
+            }
+        } else {
+            savedInventory = true;
+        }
+    }
+}
+
 function animate() {
     requestAnimationFrame(animate);
 
+    let time = performance.now();
+
+    if (time - lastCPSCheck >= 1000) {
+        currentCPS = clicksThisSecond;
+        if (currentCPS > 18) {
+            console.warn("CPS Alto Detectado: " + currentCPS);
+        }
+        clicksThisSecond = 0;
+        lastCPSCheck = time;
+    }
+
     if (document.pointerLockElement === document.body) {
-        const time = performance.now();
         const delta = (time - prevTime) / 1000;
 
         velocity.x -= velocity.x * 10.0 * delta;
