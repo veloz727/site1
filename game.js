@@ -39,24 +39,52 @@ window.initGame = function(version) {
     container.innerHTML = '<div id="crosshair">+</div>';
     container.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Luzes aprimoradas para destacar o relevo das texturas
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
     scene.add(ambientLight);
     
-    // LINHA CORRIGIDA: DirectionalLight
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.45);
     directionalLight.position.set(20, 40, 20);
     scene.add(directionalLight);
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshLambertMaterial({ color: 0x557a2b });
+    // ==========================================
+    // SISTEMA DE TEXTURAS ESTILO MINECRAFT
+    // ==========================================
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Links das texturas clássicas do Minecraft (Top, Side, Bottom)
+    const textureTop = textureLoader.load('https://i.imgur.com/L4N64qE.png');    // Grama por cima
+    const textureSide = textureLoader.load('https://i.imgur.com/9wNen1z.png');   // Terra com grama do lado
+    const textureBottom = textureLoader.load('https://i.imgur.com/7A7m8gG.png'); // Terra por baixo
 
+    // CRUCIAL: Desativa o desfoque do navegador para manter o visual PIXEL ART (Estilo Minecraft)
+    [textureTop, textureSide, textureBottom].forEach(tex => {
+        tex.magFilter = THREE.NearestFilter;
+        tex.minFilter = THREE.NearestFilter;
+    });
+
+    // Mapeamento das 6 faces do cubo (Direita, Esquerda, Cima, Baixo, Frente, Trás)
+    const materials = [
+        new THREE.MeshLambertMaterial({ map: textureSide }),   // Face Direita
+        new THREE.MeshLambertMaterial({ map: textureSide }),   // Face Esquerda
+        new THREE.MeshLambertMaterial({ map: textureTop }),    // Face Superior (Grama)
+        new THREE.MeshLambertMaterial({ map: textureBottom }), // Face Inferior (Terra)
+        new THREE.MeshLambertMaterial({ map: textureSide }),   // Face Frente
+        new THREE.MeshLambertMaterial({ map: textureSide })    // Face Trás
+    ];
+
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+
+    // Gerando o mundo texturizado
     for (let x = 0; x < 32; x++) {
         for (let z = 0; z < 32; z++) {
-            const cube = new THREE.Mesh(geometry, material);
+            // Criamos o bloco passando o array de materiais com as texturas corretas
+            const cube = new THREE.Mesh(geometry, materials);
             cube.position.set(x, 0, z);
             scene.add(cube);
         }
     }
+    // ==========================================
 
     document.body.addEventListener('click', () => {
         document.body.requestPointerLock();
