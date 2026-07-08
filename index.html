@@ -1,21 +1,117 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
- <meta charset="UTF-8">
- <title>Projeto enzo feião - p5.js</title>
- <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 1.8.9 - A Era de Ouro</title>
+    <style>
+        /* Estilos Básicos */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+        header {
+            background-color: #2e6e14; /* Verde clássico do Minecraft */
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px #000;
+        }
+
+        nav {
+            background-color: #333;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #5cbf3d;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #262626;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            color: #5cbf3d;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .destaque {
+            background-color: #333;
+            padding: 15px;
+            border-left: 5px solid #2e6e14;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #111;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 50px;
+        }
+    </style>
 </head>
-
 <body>
- <h1>enzo feio, vitor lindo</h1>
- <p>enzo cabeçudo feio</p>
 
- <img src="images (2).jfif" alt="Foto do Enzo" width="640">
+    <header>
+        <h1>Minecraft 1.8.9</h1>
+        <p>A versão definitiva para PvP e Nostalgia</p>
+    </header>
 
+    <nav>
+        <a href="#sobre">Sobre</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#mods">Mods Populares</a>
+    </nav>
 
- <script src="sketch.js"></script>
+    <div class="container">
+        
+        <section id="sobre">
+            <h2>Por que a 1.8.9 ainda é tão popular?</h2>
+            <p>Lançada originalmente há alguns anos, a versão 1.8.9 do Minecraft continua sendo a favorita de grande parte da comunidade de <strong>PvP (Player vs Player)</strong> e de grandes servidores de minigames (como o Hypixel).</p>
+            
+            <div class="destaque">
+                <strong>O Combate Clássico:</strong> Esta é a última versão antes da atualização de combate (1.9), o que significa que não há tempo de recarga (cooldown) para os ataques, permitindo o famoso "combo" de cliques rápidos.
+            </div>
+        </section>
 
-</body>
-</html>
+        <section id="recursos">
+            <h2>Principais Características</h2>
+            <ul>
+                <li><strong>Mecânicas de PvP fluidas:</strong> W-Tap, Block-Hit e Strafe funcionam perfeitamente aqui.
