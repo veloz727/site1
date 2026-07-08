@@ -3,22 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Minecraft Clone</title>
+    <title>WebCraft Launcher</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-    <div id="crosshair">+</div>
-    <div id="instructions">
-        <strong>Controles:</strong><br>
-        Clique na tela para capturar o mouse<br>
-        W, A, S, D - Movimentação<br>
-        Espaço - Pular<br>
-        Clique Esquerdo - Destruir Bloco<br>
-        Clique Direito - Criar Bloco
+    <div id="launcher" class="glass-container">
+        <div class="launcher-header">
+            <h1>WEBCRAFT</h1>
+            <p>Selecione sua versão e jogue</p>
+        </div>
+        
+        <div class="launcher-body">
+            <div class="input-group">
+                <label for="nickname">Nickname</label>
+                <input type="text" id="nickname" placeholder="Digite seu nick..." autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label for="version">Versão</label>
+                <select id="version">
+                    <option value="1.8.9">1.8.9 (Combate Clássico)</option>
+                    <option value="1.9">1.9 (Combat Update)</option>
+                    <option value="1.12.1">1.12.1 (World of Color)</option>
+                </select>
+            </div>
+
+            <button id="btn-jogar">JOGAR</button>
+        </div>
     </div>
 
+    <div id="loading-screen" class="hidden">
+        <div class="spinner"></div>
+        <p>Carregando terreno e texturas...</p>
+    </div>
+
+    <div id="game-container" class="hidden">
+        <div id="crosshair">+</div>
+    </div>
+
+    <script src="app.js"></script>
     <script src="game.js"></script>
 </body>
 </html>

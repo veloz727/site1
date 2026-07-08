@@ -1,113 +1,97 @@
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x7ec0ee);
-scene.fog = new THREE.FogExp2(0x7ec0ee, 0.02);
-
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-document.body.appendChild(renderer.domElement);
-
-const ambientLight = new THREE.AmbientLight(0xcccccc, 0.6);
-scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(20, 40, 20);
-scene.add(directionalLight);
-
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const materialGrama = new THREE.MeshLambertMaterial({ color: 0x557a2b });
-
-const blocks = [];
-const worldSize = 20;
-
-for (let x = -worldSize/2; x < worldSize/2; x++) {
-    for (let z = -worldSize/2; z < worldSize/2; z++) {
-        let y = Math.floor(Math.sin(x * 0.2) * 2 + Math.cos(z * 0.2) * 2);
-        
-        for (let h = -3; h <= y; h++) {
-            const block = new THREE.Mesh(geometry, materialGrama);
-            block.position.set(x, h, z);
-            scene.add(block);
-            blocks.push(block);
-        }
-    }
-}
-
-camera.position.set(0, 5, 0);
+let scene, camera, renderer;
 let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
-let canJump = false;
 let prevTime = performance.now();
 
-document.body.addEventListener('click', () => {
-    document.body.requestPointerLock();
-});
+// Configurações de jogabilidade baseadas na versão
+let gameSettings = {
+    attackDelay: 0,
+    speed: 400.0
+};
 
-let yaw = 0;
-let pitch = 0;
-
-document.addEventListener('mousemove', (event) => {
-    if (document.pointerLockElement === document.body) {
-        yaw -= event.movementX * 0.002;
-        pitch -= event.movementY * 0.002;
-        pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
-
-        camera.rotation.set(pitch, yaw, 0, 'YXZ');
+function initGame(version) {
+    // Ajusta mecânicas com base na versão escolhida no Launcher
+    if (version === "1.12.1") {
+        gameSettings.attackDelay = 600; // Delay de ataque em milissegundos
+        console.log("Mecânicas da 1.12.1 ativadas: Delay de ataque configurado.");
+    } else {
+        gameSettings.attackDelay = 0; // Combate rápido da 1.8.9
+        console.log("Mecânicas da 1.8.9 ativadas: Combate rápido sem cooldown.");
     }
-});
 
-document.addEventListener('keydown', (e) => {
-    switch (e.code) {
-        case 'KeyW': moveForward = true; break;
-        case 'KeyS': moveBackward = true; break;
-        case 'KeyA': moveLeft = true; break;
-        case 'KeyD': moveRight = true; break;
-        case 'Space': if (canJump) velocity.y += 8; canJump = false; break;
-    }
-});
+    // 1. Criar a Cena e Câmera
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x7ec0ee); // Cor do céu (Skyblue)
+    
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(16, 2, 16); // Posição inicial do jogador
 
-document.addEventListener('keyup', (e) => {
-    switch (e.code) {
-        case 'KeyW': moveForward = false; break;
-        case 'KeyS': moveBackward = false; break;
-        case 'KeyA': moveLeft = false; break;
-        case 'KeyD': moveRight = false; break;
-    }
-});
+    // 2. Renderizador
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById("game-container").appendChild(renderer.domElement);
 
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2(0, 0);
+    // 3. Iluminação
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionLight(0xffffff, 0.6);
+    directionalLight.position.set(10, 20, 15);
+    scene.add(directionalLight);
 
-document.addEventListener('mousedown', (e) => {
-    if (document.pointerLockElement !== document.body) return;
+    // 4. Gerar Mundo Simples (Mundo plano de 32x32 blocos de grama)
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshLambertMaterial({ color: 0x557a2b }); // Verde Grama
 
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(blocks);
-
-    if (intersects.length > 0 && intersects[0].distance < 6) {
-        const intersect = intersects[0];
-
-        if (e.button === 0) {
-            scene.remove(intersect.object);
-            blocks.splice(blocks.indexOf(intersect.object), 1);
-        } else if (e.button === 2) {
-            const position = new THREE.Vector3().copy(intersect.point).add(intersect.face.normal);
-            position.x = Math.round(position.x);
-            position.y = Math.round(position.y);
-            position.z = Math.round(position.z);
-
-            const newBlock = new THREE.Mesh(geometry, materialGrama);
-            newBlock.position.copy(position);
-            scene.add(newBlock);
-            blocks.push(newBlock);
+    for (let x = 0; x < 32; x++) {
+        for (let z = 0; z < 32; z++) {
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.set(x, 0, z);
+            scene.add(cube);
         }
     }
-});
 
-document.addEventListener('contextmenu', e => e.preventDefault());
+    // 5. Controles Pointer Lock (Ativa ao clicar na tela do jogo)
+    document.body.addEventListener('click', () => {
+        document.body.requestPointerLock();
+    });
 
+    document.addEventListener('mousemove', (e) => {
+        if (document.pointerLockElement === document.body) {
+            camera.rotation.y -= e.movementX * 0.002;
+            camera.rotation.x -= e.movementY * 0.002;
+            // Limita a rotação vertical para não dar "looping" na cabeça
+            camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+        }
+    });
+
+    // Inputs de Teclado
+    window.addEventListener('keydown', (e) => {
+        if(e.code === 'KeyW') moveForward = true;
+        if(e.code === 'KeyS') moveBackward = true;
+        if(e.code === 'KeyA') moveLeft = true;
+        if(e.code === 'KeyD') moveRight = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+        if(e.code === 'KeyW') moveForward = false;
+        if(e.code === 'KeyS') moveBackward = false;
+        if(e.code === 'KeyA') moveLeft = false;
+        if(e.code === 'KeyD') moveRight = false;
+    });
+
+    // Ajuste de Janela Dinâmico
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Iniciar o Loop de Renderização/Física
+    animate();
+}
+
+// Loop de Animação e Movimento
 function animate() {
     requestAnimationFrame(animate);
 
@@ -115,46 +99,35 @@ function animate() {
         const time = performance.now();
         const delta = (time - prevTime) / 1000;
 
+        // Reduz a velocidade gradativamente (atrito)
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= 9.8 * 2.0 * delta;
 
         direction.z = Number(moveForward) - Number(moveBackward);
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize();
 
+        // Aplica o movimento na direção que a câmera está olhando
         const camDirection = new THREE.Vector3();
         camera.getWorldDirection(camDirection);
-        camDirection.y = 0;
+        camDirection.y = 0; // Previne voar/afundar ao olhar para cima/baixo
         camDirection.normalize();
 
-        const camSide = new THREE.Vector3(-camDirection.z, 0, camDirection.x);
+        const camSideways = new THREE.Vector3(-camDirection.z, 0, camDirection.x);
 
         if (moveForward || moveBackward) {
-            velocity.addScaledVector(camDirection, direction.z * 40.0 * delta);
+            velocity.z -= direction.z * gameSettings.speed * delta;
         }
         if (moveLeft || moveRight) {
-            velocity.addScaledVector(camSide, direction.x * 40.0 * delta);
+            velocity.x -= direction.x * gameSettings.speed * delta;
         }
 
-        camera.position.addScaledVector(velocity, delta);
-
-        if (camera.position.y < 2) {
-            velocity.y = 0;
-            camera.position.y = 2;
-            canJump = true;
-        }
+        // Atualiza a posição da câmera
+        camera.position.addScaledVector(camDirection, -velocity.z * delta * 0.05);
+        camera.position.addScaledVector(camSideways, velocity.x * delta * 0.05);
 
         prevTime = time;
     }
 
     renderer.render(scene, camera);
 }
-
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-animate();

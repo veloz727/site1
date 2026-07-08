@@ -1,27 +1,150 @@
-body {
+/* Reset e Variáveis */
+* {
     margin: 0;
-    overflow: hidden;
-    font-family: sans-serif;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+body {
+    background: url('https://images.alphacoders.com/133/1331036.png') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+}
+
+/* Glassmorphism Launcher */
+.glass-container {
+    background: rgba(20, 20, 20, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 40px;
+    width: 400px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    text-align: center;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.launcher-header h1 {
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.launcher-header p {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #00ff88;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.input-group input, .input-group select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus, .input-group select:focus {
+    border-color: #00ff88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
+
+option {
+    background: #141414;
+    color: #fff;
+}
+
+/* Botão Jogar */
+#btn-jogar {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #00ff88, #00b359);
+    border: none;
+    border-radius: 8px;
+    color: #141414;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+}
+
+#btn-jogar:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+}
+
+/* Estado Escondido */
+.hidden {
+    display: none !important;
+}
+
+/* Loading Screen */
+#loading-screen {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #00ff88;
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Container do Jogo */
+#game-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 #crosshair {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 10px;
-    height: 10px;
     transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.7);
     user-select: none;
-    pointer-events: none;
-}
-#instructions {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    border-radius: 5px;
     pointer-events: none;
 }
