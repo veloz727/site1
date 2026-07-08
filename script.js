@@ -1,3 +1,42 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const nicknameInput = document.getElementById("nickname");
+    const versionSelect = document.getElementById("version");
+    const btnJogar = document.getElementById("btn-jogar");
+    const launcher = document.getElementById("launcher");
+    const loadingScreen = document.getElementById("loading-screen");
+    const gameContainer = document.getElementById("game-container");
+
+    // Carregar Nickname salvo localmente
+    if (localStorage.getItem("webcraft_nick")) {
+        nicknameInput.value = localStorage.getItem("webcraft_nick");
+    }
+
+    btnJogar.addEventListener("click", () => {
+        const nickname = nicknameInput.value.trim();
+        const versaoSelecionada = versionSelect.value;
+
+        if (nickname === "") {
+            alert("Por favor, insira um Nickname para jogar!");
+            return;
+        }
+
+        // Salva o perfil localmente
+        localStorage.setItem("webcraft_nick", nickname);
+
+        // Transição: Esconde Launcher -> Mostra Loading
+        launcher.classList.add("hidden");
+        loadingScreen.classList.remove("hidden");
+
+        // Simula o carregamento do motor gráfico e texturas (2 segundos)
+        setTimeout(() => {
+            loadingScreen.classList.add("hidden");
+            gameContainer.classList.remove("hidden");
+            
+            // Inicia o motor do jogo passando a versão escolhida
+            initGame(versaoSelecionada);
+        }, 2000);
+    });
+});
 let scene, camera, renderer;
 let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
 let velocity = new THREE.Vector3();
